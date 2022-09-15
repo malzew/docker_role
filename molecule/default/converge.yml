@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include malzew.docker_role"
+      include_role:
+        name: "malzew.docker_role"
