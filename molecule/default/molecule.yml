@@ -1,13 +1,44 @@
 ---
+# dependency:
+#   name: galaxy
+  # driver:
+  # name: delegated
+  # options:
+  #   managed: False
+  #   login_cmd_template: 'ssh {instance} -F /tmp/ssh-config'
+  #   ansible_connection_options:
+  #     ansible_connection: ssh
+  #     ansible_ssh_common_args: '-F /path/to/ssh-config'
+  # platforms:
+  # - name: instance
+# driver:
+#   name: docker
+# platforms:
+#   - name: instance
+#     image: ubuntu:22.04
+#     pre_build_image: true
+# provisioner:
+#   name: ansible
+# verifier:
+#   name: ansible
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: vagrant
+  provider:
+    name: virtualbox
 platforms:
-  - name: instance
-    image: quay.io/centos/centos:stream8
-    pre_build_image: true
+  - name: new-project-server
+    box: bento/ubuntu-20.04
+    instance_raw_config_args:
+      - "vm.network 'forwarded_port', guest: 80, host: 8088"
 provisioner:
   name: ansible
+  connection_options:
+    ansible_ssh_user: vagrant
+    ansible_become: true
+  log: true
+  lint:
+    name: ansible-lint
 verifier:
   name: ansible
